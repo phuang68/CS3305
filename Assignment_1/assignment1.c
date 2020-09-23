@@ -66,12 +66,12 @@ int main(int argc, char **argv)
 	if (pid1 == 0)// Child 1
 	{
 		i = getppid(); // Get parent's pid
-		j = getpid(); // Get
+		j = getpid(); // Get child_1's pid
 		printf("parent process (PID %d) created child_1 (PID %d) \n", i, j);
 		printf("parent (PID %d) is waiting for child_1 (PID %d) to complete before creating child_2\n", i, j);
 	
 		if(j > 0){
-			pid1_1 = fork(); //Only create the child process when child_1 is created successfully
+			pid1_1 = fork(); //Only create child_1.1 process when child_1 is created successfully
 		}
 
 		if(pid1_1 == 0){
