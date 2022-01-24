@@ -1,3 +1,8 @@
+/* 	Author: Pu Huang
+	Description: Assignment_1
+	Course: CS3305A
+	Date: Sep 25th, 2020
+*/
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/types.h>
@@ -58,35 +63,31 @@ int main(int argc, char **argv)
 
 	if (pid1 > 0)// Parent
 	{
+		i = getpid();
+		printf("parent process (PID %d) created child_1 (PID %d) \n", i, pid1);
+		printf("parent (PID %d) is waiting for child_1 (PID %d) to complete before creating child_2\n", i, pid1);
 		wait(NULL);// Waiting for child_1's process to finish
 		pid2 = fork();// Create the second child process
-		wait(NULL);//Waiting for child_2's process to finish
+		if (pid2 > 0) {// Child 2 is successfully created
+		printf("parent process (PID %d) created child_2 (PID %d) \n", i, pid2);
+		}
+		wait(NULL); //Waiting for child_2's process to finish}
 	}
 
 	if (pid1 == 0)// Child 1
 	{
-		i = getppid(); // Get parent's pid
-		j = getpid(); // Get child_1's pid
-		printf("parent process (PID %d) created child_1 (PID %d) \n", i, j);
-		printf("parent (PID %d) is waiting for child_1 (PID %d) to complete before creating child_2\n", i, j);
-	
-		if(j > 0){
-			pid1_1 = fork(); //Only create child_1.1 process when child_1 is created successfully
-		}
-
-		if(pid1_1 == 0){
-			i = getppid(); // Get child_1's pid
-			j = getpid(); // Get child_1.1's pid
-			printf("child_1 (PID %d) created child_1.1 (PID %d)\n", i, j);
+		i = getpid();	 // Get Child 1 pid
+		pid1_1 = fork(); // Create child_1.1 process
+		if (pid1_1 > 0) // Child1_1 is successfully created
+		{
+			printf("child_1 (PID %d) created child_1.1 (PID %d)\n", i, pid1_1);
 			printf("child_1 (PID %d) is now complete\n", i);
-		}		
+		}
 	}
 
-	if (pid2 == 0) // Child 2
+	if (pid2 == 0 && pid1  > 0) // Child 2
 	{
-		i = getppid();// Get parent's pid
 		j = getpid(); // Get child_2's pid
-		printf("parent process (PID %d) created child_2 (PID %d) \n", i, j);
 		printf("child_2 (PID %d) is calling an external program external_program.out and leaving child_2..\n", j);
 		sprintf(buffer,"%d\n", j); // Transforming child_2's pid to be of type char
 		status = execl(argv[1], argv[1], buffer, NULL); // Calling external program
